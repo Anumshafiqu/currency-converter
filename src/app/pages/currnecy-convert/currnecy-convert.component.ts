@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CurrencyserviceService } from '../currencyservice.service';
+import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-currnecy-convert',
   templateUrl: './currnecy-convert.component.html',
@@ -47,22 +48,22 @@ export class CurrnecyConvertComponent {
 
 
 
-  amount: number = 0.95;
-  fromCurrency: string = 'ANG';
-  toCurrency: string = 'AMD';
-  rate: number = 0;
-  conversionResult: number | null = null;
-  lastUpdated: Date = new Date();
+  // amount: number = 0.95;
+  // fromCurrency: string = 'ANG';
+  // toCurrency: string = 'AMD';
+  // rate: number = 0;
+  // conversionResult: number | null = null;
+  // lastUpdated: Date = new Date();
 
-  currencies = [
-    { code: 'ANG', name: 'Netherlands Antillean guilder' },
-    { code: 'AMD', name: 'Armenian dram' },
-    { code: 'USD', name: 'US Dollar' },
-    { code: 'EUR', name: 'Euro' },
-    { code: 'INR', name: 'Indian Rupee' }
-  ];
+  // currencies = [
+  //   { code: 'ANG', name: 'Netherlands Antillean guilder' },
+  //   { code: 'AMD', name: 'Armenian dram' },
+  //   { code: 'USD', name: 'US Dollar' },
+  //   { code: 'EUR', name: 'Euro' },
+  //   { code: 'INR', name: 'Indian Rupee' }
+  // ];
 
-  constructor(private currencyService: CurrencyserviceService) {}
+  // constructor(private currencyService: CurrencyserviceService) {}
 
   //  convertCurrency() {
   //   if (this.fromCurrency === this.toCurrency) {
@@ -114,57 +115,128 @@ export class CurrnecyConvertComponent {
 
 
   convertCurrency() {
-    // If the selected currencies are the same, just return the amount
     if (this.fromCurrency === this.toCurrency) {
       this.rate = 1;
-      this.conversionResult = this.amount; // Set the conversion result directly
-      this.lastUpdated = new Date(); // Set the last updated time
+      this.conversionResult = this.amount; 
+      this.lastUpdated = new Date(); 
       return;
     }
-  
-    // Manually setting the rate for specific cases
     if (this.fromCurrency === 'ANG' && this.toCurrency === 'AMD') {
       this.rate = 218.645951;
     } else if (this.fromCurrency === 'AMD' && this.toCurrency === 'ANG') {
       this.rate = 1 / 218.645951;
     } else {
-      this.rate = 1.1;  // Default rate
+      this.rate = 1.1; 
     }
-  
-    // Initially calculate the conversion result with the rate (without waiting for the API)
     this.conversionResult = this.amount * this.rate;
-  
-    // Make the API call to get the actual conversion rate
     this.currencyService.getExchangeRate(this.fromCurrency, this.toCurrency)
       .subscribe({
         next: (data) => {
-          console.log('API Response:', data); // Debugging the API response
-          // If API provides a valid rate, update the rate and the result
+          console.log('API Response:', data); 
           if (data.result) {
             this.rate = data.result;
             this.conversionResult = this.amount * this.rate;
-            this.lastUpdated = new Date(data.date || new Date()); // Set last updated time
+            this.lastUpdated = new Date(data.date || new Date()); 
           } else {
-            // Handle unexpected data if the rate is missing
             console.error('Invalid API response:', data);
           }
         },
         error: (err) => {
-          console.error('API Error:', err); // Log any errors from the API call
-          // Optionally show a message if the API fails
+          console.error('API Error:', err); 
           this.conversionResult = null;
-          // this.lastUpdated = null;
+
         }
       });
   }
 
   
+  // swapCurrencies() {
+  //   [this.fromCurrency, this.toCurrency] = [this.toCurrency, this.fromCurrency];
+  //   this.convertCurrency();
+  // }
+
+  // getCurrencyName(code: string): string {
+  //   return this.currencies.find(c => c.code === code)?.name || code;
+  // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  amount: number = 0.95;
+  fromCurrency: string = 'AMD';
+  toCurrency: string = 'AND';
+  rate: number = 0;
+  conversionResult: number | null = null;
+  lastUpdated: Date = new Date();
+  
+  currencies = [
+    { code: 'AMD', name: 'Armenian dram', countryCode: 'am' },
+    { code: 'ANG', name: 'Netherlands Antillean', countryCode: 'nl' },
+    { code: 'USD', name: 'US Dollar', countryCode: 'us' },
+    { code: 'EUR', name: 'Euro', countryCode: 'eu' },
+    { code: 'INR', name: 'Indian Rupee', countryCode: 'in' }
+  ];
+  
+  constructor(private currencyService: CurrencyserviceService) {}
+  
+  getCurrencyName(code: string): string {
+    return this.currencies.find(c => c.code === code)?.name || code;
+  }
+  
+  getCountryCode(code: string): string {
+    return this.currencies.find(c => c.code === code)?.countryCode || 'us';
+  }
+  
+  // convertCurrency() {
+  //   if (this.fromCurrency === this.toCurrency) {
+  //     this.rate = 1;
+  //     this.conversionResult = this.amount;
+  //     this.lastUpdated = new Date();
+  //     return;
+  //   }
+  
+  //   this.currencyService.getExchangeRate(this.fromCurrency, this.toCurrency)
+  //     .subscribe({
+  //       next: (data) => {
+  //         if (data.result) {
+  //           this.rate = data.result;
+  //           this.conversionResult = this.amount * this.rate;
+  //           this.lastUpdated = new Date(data.date || new Date());
+  //         }
+  //       },
+  //       error: (err) => {
+  //         console.error('API Error:', err);
+  //         this.conversionResult = null;
+  //       }
+  //     });
+  // }
+  
   swapCurrencies() {
     [this.fromCurrency, this.toCurrency] = [this.toCurrency, this.fromCurrency];
     this.convertCurrency();
   }
-
-  getCurrencyName(code: string): string {
-    return this.currencies.find(c => c.code === code)?.name || code;
-  }
+  
+  
 }
