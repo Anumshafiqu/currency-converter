@@ -32,21 +32,9 @@ h2{
     flex-direction: column;
   }
   
-  .currency-option {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  
-  .currency-flag {
-    width: 20px;
-    height: 14px;
-    object-fit: cover;
-  }
-  
-  .swap-btn {
-    display: flex;
-    align-items: center;
-    margin-top: 1.6rem;
+ /* Set the max height and enable scrolling for the dropdown */
+.scrollable-dropdown {
+    max-height: 200px; /* Adjust this value as needed */
+    overflow-y: auto;  /* Enables scrolling if content overflows */
   }
   

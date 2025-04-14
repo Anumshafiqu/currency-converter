@@ -78,21 +78,16 @@
 
 
 
-
+ 
    <div class="card-1">
-
    <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="bg-light rounded-4 shadow-lg p-4 p-md-5 w-100 mx-2" style="height: 550px;">
       <h2 class="text-center fw-bold my-5">Currency Converter</h2>
       <form class="row g-3 align-items-end justify-content-center" (ngSubmit)="convertCurrency()">
-        
-        <!-- Amount Input -->
         <div class="col-md-3">
           <label for="amount" class="form-label">Amount</label>
           <input type="number" step="0.01" min="0" class="form-control" [(ngModel)]="amount" name="amount" required>
         </div>
-  
-        <!-- From Dropdown -->
         <div class="col-md-3">
           <label class="form-label">From</label>
           <div class="dropdown w-100">
@@ -104,7 +99,7 @@
               </div>
               <i class="bi bi-chevron-down ms-2"></i>
             </button>
-            <ul class="dropdown-menu w-100">
+            <ul class="dropdown-menu w-100 scrollable-dropdown">
               <li *ngFor="let currency of currencies">
                 <a class="dropdown-item d-flex align-items-center" href="#" (click)="fromCurrency = currency.code">
                   <img [src]="'https://flagcdn.com/24x18/' + currency.countryCode + '.png'" class="me-2" width="24" height="18">
@@ -114,15 +109,11 @@
             </ul>
           </div>
         </div>
-  
-        <!-- Swap Button -->
         <div class="col-md-1 d-flex justify-content-center align-items-center">
           <button type="button" class="btn btn-outline-secondary rounded-circle bg-white" (click)="swapCurrencies()">
             <i class="fa fa-exchange fs-6" aria-hidden="true"></i>
           </button>
         </div>
-  
-        <!-- To Dropdown -->
         <div class="col-md-3">
           <label class="form-label">To</label>
           <div class="dropdown w-100">
@@ -134,7 +125,7 @@
               </div>
               <i class="bi bi-chevron-down ms-2"></i>
             </button>
-            <ul class="dropdown-menu w-100">
+            <ul class="dropdown-menu w-100 scrollable-dropdown">
               <li *ngFor="let currency of currencies">
                 <a class="dropdown-item d-flex align-items-center" href="#" (click)="toCurrency = currency.code">
                   <img [src]="'https://flagcdn.com/24x18/' + currency.countryCode + '.png'" class="me-2" width="24" height="18">
@@ -144,16 +135,12 @@
             </ul>
           </div>
         </div>
-  
-        <!-- Convert Button -->
         <div class="col-12 text-end mt-3">
           <button type="submit" class="btn btn-primary px-5 fw-medium p-2 mr-8" (click)="convertCurrency()">
             Convert
           </button>
         </div>
       </form>
-  
-      <!-- Conversion Result -->
       <div class="text-left mt-4" *ngIf="conversionResult">
         <div class="text-muted mb-1 fw-bold">
           {{ amount }} {{ getCurrencyName(fromCurrency) }} =
@@ -163,22 +150,106 @@
         </h2>
         <div class="text-muted mt-3">
           1.00 {{ fromCurrency }} = {{ rate }} {{ toCurrency }}<br>
-          1.00 {{ toCurrency }} = {{ (1 / rate) | number:'1.6-6' }} {{ fromCurrency }}
+          1.00 {{ toCurrency }} = {{ (1 / rate) | number:'1.2-2' }} {{ fromCurrency }}
         </div>
       </div>
-  
-      <!-- Last Updated -->
       <div class="text-end small text-muted fw-medium fixed-bottom mb-3 me-3">
         Last updated: {{ lastUpdated | date:'M/d/yyyy, h:mm:ss a' }} UTC
       </div>
     </div>
   </div>
-   </div>
+   </div> 
   
   
 
 
-
+   <!-- <div class="container">
+    <h2>Currency Converter</h2>
+  
+    <div class="converter-card">
+      <div class="form-group">
+        <label>Amount</label>
+        <input type="number" [(ngModel)]="amount" />
+      </div>
+  
+      <div class="form-group">
+        <label>From</label>
+        <p-dropdown
+          [options]="currencies"
+          [(ngModel)]="fromCurrency"
+          optionLabel="description"
+          placeholder="Select currency"
+          [filter]="true"
+          [showClear]="true"
+          [style]="{ width: '250px' }"
+        >
+          <ng-template let-currency pTemplate="item">
+            <div class="currency-option">
+              <img
+                [src]="'https://flagcdn.com/w40/' + currency.flag + '.png'"
+                width="20"
+                style="margin-right: 8px"
+              />
+              {{ currency.description }} ({{ currency.code }})
+            </div>
+          </ng-template>
+  
+          <ng-template let-currency pTemplate="selectedItem">
+            <div *ngIf="currency" class="currency-option">
+              <img
+                [src]="'https://flagcdn.com/w40/' + currency.flag + '.png'"
+                width="20"
+                style="margin-right: 8px"
+              />
+              {{ currency.description }} ({{ currency.code }})
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+  
+      <div class="form-group">
+        <label>To</label>
+        <p-dropdown
+          [options]="currencies"
+          [(ngModel)]="toCurrency"
+          optionLabel="description"
+          placeholder="Select currency"
+          [filter]="true"
+          [showClear]="true"
+          [style]="{ width: '250px' }"
+        >
+          <ng-template let-currency pTemplate="item">
+            <div class="currency-option">
+              <img
+                [src]="'https://flagcdn.com/w40/' + currency.flag + '.png'"
+                width="20"
+                style="margin-right: 8px"
+              />
+              {{ currency.description }} ({{ currency.code }})
+            </div>
+          </ng-template>
+  
+          <ng-template let-currency pTemplate="selectedItem">
+            <div *ngIf="currency" class="currency-option">
+              <img
+                [src]="'https://flagcdn.com/w40/' + currency.flag + '.png'"
+                width="20"
+                style="margin-right: 8px"
+              />
+              {{ currency.description }} ({{ currency.code }})
+            </div>
+          </ng-template>
+        </p-dropdown>
+      </div>
+  
+      <button (click)="convertCurrency()">Convert</button>
+  
+      <div class="result" *ngIf="convertedAmount">
+        {{ amount }} {{ fromCurrency?.code }} = <strong>{{ convertedAmount }}</strong> {{ toCurrency?.code }}
+      </div>
+    </div>
+  </div>
+   -->
 
 
 
